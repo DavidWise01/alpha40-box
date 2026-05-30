@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ALPHA40::BOX // COMMONS EDITION</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#000000">
+<meta name="description" content="MTG Alpha 40 / Commander deckbuilder. Privacy-first. No cloud. No tracking. Runs offline.">
+<style>
+:root{--g:#00ff41;--m:#ff0088;--b:#00e5ff;--bg:#030305;--amber:#ffb000;--W:#f5e642;--U:#4ecdc4;--B:#c0c0c0;--R:#ff6b35;--G:#6bcb77;--A:#aaa;--L:#8b7355}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:#000;color:var(--g);font-family:'Courier New',Courier,monospace;line-height:1.4;overflow-x:hidden;text-shadow:0 0 2px rgba(0,255,65,.7);background-image:radial-gradient(ellipse at center,#0a0a12 0%,#000 70%)}
+.crt{position:relative;min-height:100%;padding:12px 12px 60px}
+.scanlines{pointer-events:none;position:fixed;inset:0;z-index:999;background:repeating-linear-gradient(0deg,rgba(0,0,0,.18) 0 2px,transparent 2px 4px),repeating-linear-gradient(90deg,rgba(0,255,65,.03) 0 1px,transparent 1px 3px);mix-blend-mode:screen;animation:flicker .17s infinite;opacity:.6}
+@keyframes flicker{0%{opacity:.92}50%{opacity:1}100%{opacity:.94}}
+body::after{content:"";pointer-events:none;position:fixed;inset:0;background:radial-gradient(ellipse at center,transparent 60%,rgba(0,0,0,.85) 100%);z-index:998}
+
+header .toprow{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
+h1.glitch{margin:.2rem 0;font-size:clamp(16px,3vw,30px);letter-spacing:.05em;color:var(--m);text-shadow:0 0 6px var(--m),0 0 18px var(--m),0 0 32px #ff00aa55;position:relative}
+.pulse{animation:pulse 2.1s infinite}
+@keyframes pulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.35)}}
+.glitch::before,.glitch::after{content:attr(data-text);position:absolute;left:0;top:0;width:100%;overflow:hidden;clip:rect(0,0,0,0)}
+.glitch:hover::before{left:-1.5px;text-shadow:2px 0 var(--b);animation:g1 .3s infinite}
+.glitch:hover::after{left:1.5px;text-shadow:-2px 0 var(--m);animation:g2 .3s infinite}
+@keyframes g1{0%{clip:rect(0,9999px,12px,0)}50%{clip:rect(12px,9999px,22px,0)}100%{clip:rect(2px,9999px,16px,0)}}
+@keyframes g2{0%{clip:rect(18px,9999px,26px,0)}50%{clip:rect(4px,9999px,10px,0)}100%{clip:rect(14px,9999px,30px,0)}}
+
+.mirrorToggle{font-size:.8rem;color:var(--b);user-select:none}
+.mirrorToggle input{accent-color:var(--b)}
+.privacy{background:var(--m);color:#000;text-align:center;padding:.35rem .5rem;font-weight:700;box-shadow:0 0 18px var(--m),inset 0 0 12px #00000055;margin:.5rem 0 .8rem;border:1px solid #000;text-shadow:none;letter-spacing:.04em}
+nav{display:flex;gap:.5rem;flex-wrap:wrap;margin:.5rem 0 1rem}
+.btn{background:#000;border:1px solid var(--g);color:var(--g);padding:.5rem .8rem;cursor:pointer;text-transform:uppercase;font-weight:700;letter-spacing:.06em;position:relative;box-shadow:inset 0 0 12px #002200,0 0 10px rgba(0,255,65,.25);transition:.12s;font-family:inherit}
+.btn:hover{background:var(--g);color:#000;box-shadow:0 0 14px var(--g),0 0 28px var(--g);transform:skew(-3deg)}
+.btn:active{transform:skew(-3deg) scale(.97)}
+.btn-magenta{border-color:var(--m);color:var(--m);box-shadow:inset 0 0 12px #330022,0 0 10px rgba(255,0,136,.25)}
+.btn-magenta:hover{background:var(--m);color:#000;box-shadow:0 0 14px var(--m)}
+.btn-blue{border-color:var(--b);color:var(--b);box-shadow:inset 0 0 12px #002233,0 0 10px rgba(0,229,255,.25)}
+.btn-blue:hover{background:var(--b);color:#000;box-shadow:0 0 14px var(--b)}
+.btn.small{padding:.15rem .45rem;font-size:.75rem}
+.btn.active{outline:2px solid var(--amber);color:var(--amber);border-color:var(--amber)}
+.btn.col-W{border-color:var(--W);color:var(--W)}.btn.col-W:hover{background:var(--W);color:#000}
+.btn.col-U{border-color:var(--U);color:var(--U)}.btn.col-U:hover{background:var(--U);color:#000}
+.btn.col-B{border-color:var(--B);color:var(--B)}.btn.col-B:hover{background:var(--B);color:#000}
+.btn.col-R{border-color:var(--R);color:var(--R)}.btn.col-R:hover{background:var(--R);color:#000}
+.btn.col-G{border-color:var(--G);color:var(--G)}.btn.col-G:hover{background:var(--G);color:#000}
+.btn.col-A{border-color:var(--A);color:var(--A)}.btn.col-A:hover{background:var(--A);color:#000}
+.btn.col-L{border-color:var(--L);color:var(--L)}.btn.col-L:hover{background:var(--L);color:#000}
+.btn.col-active{box-shadow:0 0 14px currentColor,inset 0 0 12px rgba(255,255,255,.1)}
+
+.panel{border:1px solid var(--g);background:linear-gradient(180deg,rgba(0,255,65,.06),rgba(0,0,0,.2));padding:1rem;margin:1rem 0;box-shadow:0 0 18px rgba(0,255,65,.18),inset 0 0 14px rgba(0,255,65,.06)}
+h2{margin:.1rem 0 .8rem;color:var(--b);text-shadow:0 0 8px var(--b);font-size:1.1rem;letter-spacing:.08em}
+label{display:block;margin:.6rem 0 .2rem;color:var(--amber);font-size:.8rem;letter-spacing:.06em}
+input,textarea,select{width:100%;background:#020204;color:var(--g);border:1px solid #0f2f0f;padding:.5rem;font-family:inherit;outline:none;box-shadow:inset 0 0 10px #001100}
+textarea{resize:vertical;min-height:70px}
+input:focus,textarea:focus,select:focus{border-color:var(--b);box-shadow:0 0 10px rgba(0,229,255,.3)}
+
+.tetherGrid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:860px){.tetherGrid{grid-template-columns:1fr}}
+.p2pChat{margin-top:1rem;display:grid;grid-template-columns:1fr auto;gap:.5rem}
+.log{grid-column:1/-1;height:130px;overflow:auto;background:#000;border:1px solid #133;padding:.5rem;font-size:.82rem;box-shadow:inset 0 0 12px #001a1a}
+
+.builderGrid{display:grid;grid-template-columns:1.1fr .9fr;gap:1rem}
+@media(max-width:980px){.builderGrid{grid-template-columns:1fr}}
+.pool{max-height:46vh;overflow:auto;border:1px solid #0a3a0a;background:#000000aa}
+.cardrow{display:flex;justify-content:space-between;align-items:center;padding:.28rem .45rem;border-bottom:1px dotted #083308;font-size:.9rem}
+.cardrow:hover{background:rgba(0,255,65,.08)}
+.cardrow em{opacity:.6;font-size:.8em;margin-left:.4rem}
+.colpip{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;vertical-align:middle;box-shadow:0 0 4px currentColor}
+.decklist{min-height:180px;border:1px solid var(--m);padding:.5rem;background:#0a0005aa;max-height:44vh;overflow:auto}
+#deckStats{margin-bottom:.5rem;color:var(--amber);font-size:.82rem}
+#deckTypeBreakdown{color:var(--b);font-size:.75rem;margin-bottom:.3rem}
+
+.curveWrap{margin-top:.8rem}
+.curveWrap h3{color:var(--amber);font-size:.8rem;letter-spacing:.06em;margin:0 0 .3rem}
+#curveCanvas{display:block;width:100%;height:80px;image-rendering:pixelated}
+
+.colorFilters{display:flex;gap:.3rem;flex-wrap:wrap;margin-bottom:.6rem}
+
+.tomeGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:.55rem;max-height:60vh;overflow:auto;padding-right:.3rem}
+.tomeCard{border:1px solid var(--b);padding:.5rem .6rem;background:rgba(0,229,255,.06);box-shadow:0 0 10px rgba(0,229,255,.12)}
+.tomeCard b{color:#fff}
+.tomeCard .cost{float:right;color:var(--amber)}
+.tomeCard i{color:#8df}
+
+.hand{display:flex;flex-wrap:wrap;gap:.55rem;margin-top:.8rem}
+.hand .card{border:1px solid var(--g);padding:.55rem .6rem;min-width:110px;text-align:center;background:#001a00;box-shadow:0 0 12px rgba(0,255,65,.25);animation:pop .2s ease}
+@keyframes pop{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+
+.loglist{max-height:50vh;overflow:auto;border:1px solid #222;padding:.5rem;background:#000}
+.logentry{padding:.3rem 0;border-bottom:1px dashed #132;color:#9f9}
+
+.cmdZone{border:1px dashed var(--amber);padding:.5rem;margin-bottom:.5rem;background:#080400aa;display:none}
+.cmdZone.active{display:block}
+
+#textExportArea{font-size:.8rem;color:#cfc;min-height:120px;font-family:inherit}
+
+footer{position:fixed;bottom:0;left:0;right:0;padding:.4rem .6rem;text-align:center;background:#000;border-top:1px solid var(--m);color:var(--m);font-size:.8rem;letter-spacing:.08em;z-index:10;box-shadow:0 -0 14px rgba(255,0,136,.3)}
+
+#cam{position:fixed;inset:0;background:#000;display:none;place-items:center;z-index:9999}
+#cam.show{display:grid}
+#cam div{font-size:clamp(28px,8vw,82px);color:var(--b);text-align:center;line-height:1.1;text-shadow:0 0 12px var(--b),0 0 32px var(--m),0 0 60px var(--m);animation:camflash .18s infinite}
+@keyframes camflash{0%,100%{opacity:1;filter:hue-rotate(0)}50%{opacity:.65;filter:hue-rotate(60deg)}}
+
+html.inverted body{transform:scaleX(-1)}
+html.inverted .scanlines{transform:scaleX(-1)}
+*{scrollbar-width:thin;scrollbar-color:var(--m) #000}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:#000}
+::-webkit-scrollbar-thumb{background:#ff008855;border:1px solid var(--m)}
+</style>
+</head>
+<body>
+<div class="crt">
+  <div class="scanlines"></div>
+  <header>
+    <div class="toprow">
+      <h1 class="glitch pulse" data-text="ALPHA40::BOX // 1=0=1 // COMMONS">ALPHA40::BOX // 1=0=1 // COMMONS</h1>
+      <label class="mirrorToggle"><input type="checkbox" id="mirror"> SHADOW GAMES INVERTED</label>
+    </div>
+    <div class="privacy">⚠ YOUR DATA NEVER LEAVES THIS BOX — localStorage ONLY — NO CLOUD — NO TRACKING — PRIVACY FIRST</div>
+    <nav>
+      <button class="btn navbtn" data-view="builder">DECKBUILDER</button>
+      <button class="btn navbtn" data-view="tome">TOME</button>
+      <button class="btn navbtn" data-view="arena">ARENA</button>
+      <button class="btn navbtn" data-view="tether">8-POINT TETHER</button>
+      <button class="btn navbtn" data-view="log">LINEAGE LOG</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ═══ DECKBUILDER ═══ -->
+    <section id="view-builder" class="view panel">
+      <h2>DECKBUILDER</h2>
+      <div style="display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;margin-bottom:.6rem">
+        <label style="margin:0;font-size:.85rem">FORMAT:
+          <select id="formatSelect" style="width:auto;display:inline;padding:.3rem .5rem;margin-left:.4rem">
+            <option value="alpha40">ALPHA 40</option>
+            <option value="commander">COMMANDER / EDH</option>
+          </select>
+        </label>
+        <span id="formatRules" style="font-size:.75rem;color:var(--b)">40-card min · Power 9 max 1 · Fast Mana max 4 · 4 copies max</span>
+      </div>
+
+      <div id="cmdZone" class="cmdZone">
+        <label>COMMANDER</label>
+        <div id="cmdCard" style="color:var(--amber)">— none set —</div>
+        <input id="cmdSearch" placeholder="SEARCH COMMANDER..." style="margin-top:.3rem">
+        <div id="cmdResults" style="max-height:120px;overflow:auto;background:#000;border:1px solid #0a3a0a"></div>
+      </div>
+
+      <div class="builderGrid">
+        <div>
+          <input id="search" placeholder="FILTER ALPHA CARDS... (name, type, color)">
+          <div class="colorFilters">
+            <button class="btn small col-W colFilter" data-col="W">⬤ W</button>
+            <button class="btn small col-U colFilter" data-col="U">⬤ U</button>
+            <button class="btn small col-B colFilter" data-col="B">⬤ B</button>
+            <button class="btn small col-R colFilter" data-col="R">⬤ R</button>
+            <button class="btn small col-G colFilter" data-col="G">⬤ G</button>
+            <button class="btn small col-A colFilter" data-col="A">⬤ ART</button>
+            <button class="btn small col-L colFilter" data-col="L">⬤ LAND</button>
+            <button class="btn small colFilter colClear">ALL</button>
+          </div>
+          <div id="pool" class="pool"></div>
+        </div>
+        <div>
+          <div id="deckStats"></div>
+          <div id="deckTypeBreakdown"></div>
+          <div id="deckList" class="decklist"></div>
+          <div class="curveWrap">
+            <h3>MANA CURVE</h3>
+            <canvas id="curveCanvas" width="300" height="80"></canvas>
+          </div>
+          <div style="display:flex;gap:.4rem;margin-top:.6rem;flex-wrap:wrap">
+            <button id="saveDeck" class="btn btn-magenta">SAVE + LOG LINEAGE</button>
+            <button id="clearDeck" class="btn">CLEAR</button>
+            <button id="sampleAlpha" class="btn btn-blue">SAMPLE ALPHA40</button>
+            <button id="sampleAtraxa" class="btn btn-blue">SAMPLE ATRAXA CDR</button>
+            <button id="textExport" class="btn">TEXT EXPORT</button>
+          </div>
+          <div id="textExportBox" hidden style="margin-top:.5rem">
+            <label>DECK TEXT (copy/paste):</label>
+            <textarea id="textExportArea" readonly></textarea>
+          </div>
+          <p style="font-size:.7rem;opacity:.6;margin-top:.4rem" id="formatNote">ALPHA40: Power 9 max 1 · Fast Mana (Lotus, Moxen, Sol Ring, Vault) max 4 total · Max 4 copies except basics</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ TOME ═══ -->
+    <section id="view-tome" class="view panel" hidden>
+      <h2>TOME // ALPHA CARD REFERENCE</h2>
+      <input id="tomeSearch" placeholder="SEARCH NAME, TYPE, COLOR...">
+      <div style="display:flex;gap:.3rem;flex-wrap:wrap;margin:.5rem 0">
+        <button class="btn small col-W tomeFilter" data-col="W">⬤ W</button>
+        <button class="btn small col-U tomeFilter" data-col="U">⬤ U</button>
+        <button class="btn small col-B tomeFilter" data-col="B">⬤ B</button>
+        <button class="btn small col-R tomeFilter" data-col="R">⬤ R</button>
+        <button class="btn small col-G tomeFilter" data-col="G">⬤ G</button>
+        <button class="btn small col-A tomeFilter" data-col="A">⬤ ART</button>
+        <button class="btn small col-L tomeFilter" data-col="L">⬤ LAND</button>
+        <button class="btn small tomeFilter tomeAll">ALL</button>
+      </div>
+      <div id="tomeList" class="tomeGrid" style="margin-top:.5rem"></div>
+    </section>
+
+    <!-- ═══ ARENA ═══ -->
+    <section id="view-arena" class="view panel" hidden>
+      <h2>ARENA // GOLDFISH SIMULATOR</h2>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
+        <select id="deckSelect" style="max-width:320px"></select>
+        <button id="goldfish" class="btn">DRAW 7</button>
+        <button id="draw" class="btn btn-blue">DRAW</button>
+        <button id="mull" class="btn">MULLIGAN</button>
+        <span>LIBRARY: <b id="libCount" style="color:var(--amber)">0</b></span>
+      </div>
+      <div id="hand" class="hand"></div>
+    </section>
+
+    <!-- ═══ TETHER ═══ -->
+    <section id="view-tether" class="view panel" hidden>
+      <h2>8-POINT TETHER // WEBRTC P2P // NO SERVER</h2>
+      <p>STATUS: <b id="innerStatus" style="color:var(--amber)">IDLE</b> // TX:<span id="tx">0</span> RX:<span id="rx">0</span></p>
+      <div class="tetherGrid">
+        <div>
+          <button id="host" class="btn btn-magenta">HOST BOX</button>
+          <div id="hostBox" hidden>
+            <div style="margin:.5rem 0">ROOM: <b id="roomCode" style="color:var(--b)"></b></div>
+            <label>OFFER — COPY TO VISITOR</label>
+            <textarea id="offerOut" rows="5" readonly></textarea>
+            <label>PASTE VISITOR ANSWER</label>
+            <textarea id="answerIn" rows="5"></textarea>
+            <button id="setAnswer" class="btn">LINK // COMPLETE HANDSHAKE</button>
+          </div>
+        </div>
+        <div>
+          <button id="visit" class="btn btn-blue">VISIT BOX</button>
+          <div id="visitBox" hidden>
+            <label>PASTE HOST OFFER</label>
+            <textarea id="offerIn" rows="5"></textarea>
+            <button id="makeAnswer" class="btn">GENERATE ANSWER</button>
+            <label>ANSWER — COPY TO HOST</label>
+            <textarea id="answerOut" rows="5" readonly></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="p2pChat">
+        <input id="msg" placeholder="TYPE MESSAGE // ENTER TO TRANSMIT">
+        <button id="send" class="btn">SEND</button>
+        <div id="p2pLog" class="log"></div>
+      </div>
+      <p style="opacity:.7;font-size:.78rem;margin-top:.5rem">Manual copy-paste signaling. No server. STUN for NAT only. Works air-gapped on LAN.</p>
+    </section>
+
+    <!-- ═══ LINEAGE LOG ═══ -->
+    <section id="view-log" class="view panel" hidden>
+      <h2>LINEAGE LOG // EVERY SAVE IS HISTORY</h2>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.5rem">
+        <button id="exportLog" class="btn">EXPORT JSON WITH PROVENANCE</button>
+        <button id="clearLog" class="btn btn-magenta">CLEAR LOG</button>
+      </div>
+      <div id="logList" class="loglist"></div>
+      <p style="opacity:.7;font-size:.78rem">Location: Buffalo, MN. Author + lineage stored locally only.</p>
+    </section>
+  </main>
+
+  <footer>COPY · MODIFY · SELL · OWN — NO CLOUD // COMMONS LICENSE // CODED LIKE CAMERON HOWE IN A GARAGE — 1993 // ROOT0-ATTRIBUTION-v1.0</footer>
+</div>
+
+<div id="cam"><div>DUSK<br>DAY<br>DAWN</div></div>
+
+<script>
+(() => {
+'use strict';
+
+/* ────────────────────────────────────────────────────────────────────
+   CARD DATABASE — Alpha Set (expanded, ~220 cards)
+   col: W=white U=blue B=black R=red G=green A=artifact/colorless L=land
+   p9: Power Nine  fast: fast mana  basic: basic land
+──────────────────────────────────────────────────────────────────── */
+const CARDS = [
+/* ── POWER NINE ─────────────────── */
+{n:'Ancestral Recall',       c:'U',     t:'Instant',              col:'U',p9:1},
+{n:'Black Lotus',            c:'0',     t:'Artifact',             col:'A',p9:1,fast:1},
+{n:'Mox Emerald',            c:'0',     t:'Artifact - Mox',       col:'A',p9:1,fast:1},
+{n:'Mox Jet',                c:'0',     t:'Artifact - Mox',       col:'A',p9:1,fast:1},
+{n:'Mox Pearl',              c:'0',     t:'Artifact - Mox',       col:'A',p9:1,fast:1},
+{n:'Mox Ruby',               c:'0',     t:'Artifact - Mox',       col:'A',p9:1,fast:1},
+{n:'Mox Sapphire',           c:'0',     t:'Artifact - Mox',       col:'A',p9:1,fast:1},
+{n:'Time Walk',              c:'1U',    t:'Sorcery',              col:'U',p9:1},
+{n:'Timetwister',            c:'2U',    t:'Sorcery',              col:'U',p9:1},
+/* ── WHITE ──────────────────────── */
+{n:'Armageddon',             c:'3W',    t:'Sorcery',              col:'W'},
+{n:'Balance',                c:'1W',    t:'Sorcery',              col:'W'},
+{n:'Benalish Hero',          c:'W',     t:'Creature - Human',     col:'W'},
+{n:'Circle of Protection: Black',c:'1W',t:'Enchantment',          col:'W'},
+{n:'Circle of Protection: Blue', c:'1W',t:'Enchantment',          col:'W'},
+{n:'Circle of Protection: Green',c:'1W',t:'Enchantment',          col:'W'},
+{n:'Circle of Protection: Red',  c:'1W',t:'Enchantment',          col:'W'},
+{n:'Circle of Protection: White',c:'1W',t:'Enchantment',          col:'W'},
+{n:'Conversion',             c:'2WW',   t:'Enchantment',          col:'W'},
+{n:'Crusade',                c:'WW',    t:'Enchantment',          col:'W'},
+{n:'Disenchant',             c:'1W',    t:'Instant',              col:'W'},
+{n:'Divine Offering',        c:'1W',    t:'Instant',              col:'W'},
+{n:'Eye for an Eye',         c:'WW',    t:'Instant',              col:'W'},
+{n:'Healing Salve',          c:'W',     t:'Instant',              col:'W'},
+{n:'Holy Armor',             c:'W',     t:'Enchantment',          col:'W'},
+{n:'Holy Strength',          c:'W',     t:'Enchantment',          col:'W'},
+{n:'Island Sanctuary',       c:'1W',    t:'Enchantment',          col:'W'},
+{n:'Karma',                  c:'2WW',   t:'Enchantment',          col:'W'},
+{n:'Mesa Pegasus',           c:'1W',    t:'Creature - Pegasus',   col:'W'},
+{n:'Northern Paladin',       c:'2WW',   t:'Creature - Knight',    col:'W'},
+{n:'Pearled Unicorn',        c:'2W',    t:'Creature - Unicorn',   col:'W'},
+{n:'Personal Incarnation',   c:'3WWW',  t:'Creature - Avatar',    col:'W'},
+{n:'Resurrection',           c:'3W',    t:'Sorcery',              col:'W'},
+{n:'Reverse Damage',         c:'1WW',   t:'Instant',              col:'W'},
+{n:'Righteousness',          c:'W',     t:'Instant',              col:'W'},
+{n:'Samite Healer',          c:'1W',    t:'Creature - Human',     col:'W'},
+{n:'Savannah Lions',         c:'W',     t:'Creature - Cat',       col:'W'},
+{n:'Serra Angel',            c:'3WW',   t:'Creature - Angel',     col:'W'},
+{n:'Swords to Plowshares',   c:'W',     t:'Instant',              col:'W'},
+{n:'Veteran Bodyguard',      c:'3WW',   t:'Creature - Human',     col:'W'},
+{n:'Wall of Swords',         c:'3W',    t:'Creature - Wall',      col:'W'},
+{n:'White Knight',           c:'WW',    t:'Creature - Knight',    col:'W'},
+{n:'Witch Hunter',           c:'2WW',   t:'Creature - Human',     col:'W'},
+{n:'Wrath of God',           c:'2WW',   t:'Sorcery',              col:'W'},
+/* ── BLUE ───────────────────────── */
+{n:'Air Elemental',          c:'3UU',   t:'Creature - Elemental', col:'U'},
+{n:'Braingeyser',            c:'XUU',   t:'Sorcery',              col:'U'},
+{n:'Clone',                  c:'3U',    t:'Creature',             col:'U'},
+{n:'Control Magic',          c:'2UU',   t:'Enchantment - Aura',   col:'U'},
+{n:'Counterspell',           c:'UU',    t:'Instant',              col:'U'},
+{n:'Creature Bond',          c:'1U',    t:'Enchantment - Aura',   col:'U'},
+{n:'Drain Power',            c:'UU',    t:'Sorcery',              col:'U'},
+{n:'Feedback',               c:'1U',    t:'Enchantment - Aura',   col:'U'},
+{n:'Flight',                 c:'U',     t:'Enchantment - Aura',   col:'U'},
+{n:'Giant Tortoise',         c:'1U',    t:'Creature - Turtle',    col:'U'},
+{n:'Invisibility',           c:'1U',    t:'Enchantment - Aura',   col:'U'},
+{n:'Jump',                   c:'U',     t:'Instant',              col:'U'},
+{n:'Mahamoti Djinn',         c:'4UU',   t:'Creature - Djinn',     col:'U'},
+{n:'Merfolk of the Pearl Trident',c:'U',t:'Creature - Merfolk',   col:'U'},
+{n:'Phantom Monster',        c:'3U',    t:'Creature - Illusion',  col:'U'},
+{n:'Piracy',                 c:'1U',    t:'Enchantment',          col:'U'},
+{n:'Pirate Ship',            c:'4U',    t:'Creature - Ship',      col:'U'},
+{n:'Power Sink',             c:'XU',    t:'Instant',              col:'U'},
+{n:'Prodigal Sorcerer',      c:'2U',    t:'Creature - Human',     col:'U'},
+{n:'Sea Serpent',            c:'5U',    t:'Creature - Serpent',   col:'U'},
+{n:'Siren\'s Call',          c:'U',     t:'Instant',              col:'U'},
+{n:'Steal Artifact',         c:'1UU',   t:'Enchantment - Aura',   col:'U'},
+{n:'Thoughtlace',            c:'U',     t:'Instant',              col:'U'},
+{n:'Twiddle',                c:'U',     t:'Instant',              col:'U'},
+{n:'Unsummon',               c:'U',     t:'Instant',              col:'U'},
+{n:'Wall of Air',            c:'1UU',   t:'Creature - Wall',      col:'U'},
+{n:'Wall of Water',          c:'2U',    t:'Creature - Wall',      col:'U'},
+{n:'Water Elemental',        c:'3UU',   t:'Creature - Elemental', col:'U'},
+{n:'Zephyr Falcon',          c:'1U',    t:'Creature - Bird',      col:'U'},
+/* ── BLACK ──────────────────────── */
+{n:'Animate Dead',           c:'1B',    t:'Enchantment - Aura',   col:'B'},
+{n:'Bad Moon',               c:'1B',    t:'Enchantment',          col:'B'},
+{n:'Black Knight',           c:'BB',    t:'Creature - Knight',    col:'B'},
+{n:'Bog Wraith',             c:'3B',    t:'Creature - Wraith',    col:'B'},
+{n:'Cursed Land',            c:'2BB',   t:'Enchantment - Aura',   col:'B'},
+{n:'Dark Ritual',            c:'B',     t:'Instant',              col:'B'},
+{n:'Demonic Hordes',         c:'3BBB',  t:'Creature - Demon',     col:'B'},
+{n:'Demonic Tutor',          c:'1B',    t:'Sorcery',              col:'B'},
+{n:'Drain Life',             c:'X1B',   t:'Sorcery',              col:'B'},
+{n:'Drudge Skeletons',       c:'1B',    t:'Creature - Skeleton',  col:'B'},
+{n:'Frozen Shade',           c:'2B',    t:'Creature - Shade',     col:'B'},
+{n:'Howl from Beyond',       c:'XB',    t:'Instant',              col:'B'},
+{n:'Hypnotic Specter',       c:'1BB',   t:'Creature - Specter',   col:'B'},
+{n:'Lord of the Pit',        c:'4BBB',  t:'Creature - Demon',     col:'B'},
+{n:'Mind Twist',             c:'XB',    t:'Sorcery',              col:'B'},
+{n:'Nightmare',              c:'5B',    t:'Creature - Nightmare', col:'B'},
+{n:'Paralyze',               c:'B',     t:'Enchantment - Aura',   col:'B'},
+{n:'Pestilence',             c:'2BB',   t:'Enchantment',          col:'B'},
+{n:'Plague Rats',            c:'2B',    t:'Creature - Rat',       col:'B'},
+{n:'Royal Assassin',         c:'1BB',   t:'Creature - Assassin',  col:'B'},
+{n:'Scathe Zombies',         c:'2B',    t:'Creature - Zombie',    col:'B'},
+{n:'Sengir Vampire',         c:'3BB',   t:'Creature - Vampire',   col:'B'},
+{n:'Sinkhole',               c:'BB',    t:'Sorcery',              col:'B'},
+{n:'Sorceress Queen',        c:'2BB',   t:'Creature - Human',     col:'B'},
+{n:'Terror',                 c:'1B',    t:'Instant',              col:'B'},
+{n:'Unholy Strength',        c:'B',     t:'Enchantment - Aura',   col:'B'},
+{n:'Weakness',               c:'B',     t:'Enchantment - Aura',   col:'B'},
+{n:'Will-o\'-the-Wisp',      c:'B',     t:'Creature - Spirit',    col:'B'},
+{n:'Word of Command',        c:'BB',    t:'Sorcery',              col:'B'},
+/* ── RED ────────────────────────── */
+{n:'Chaoslace',              c:'R',     t:'Instant',              col:'R'},
+{n:'Disintegrate',           c:'XR',    t:'Sorcery',              col:'R'},
+{n:'Dragon Whelp',           c:'2RR',   t:'Creature - Dragon',    col:'R'},
+{n:'Dwarven Warriors',       c:'2R',    t:'Creature - Dwarf',     col:'R'},
+{n:'Earth Elemental',        c:'3RR',   t:'Creature - Elemental', col:'R'},
+{n:'Fire Elemental',         c:'3RR',   t:'Creature - Elemental', col:'R'},
+{n:'Fireball',               c:'XR',    t:'Sorcery',              col:'R'},
+{n:'Fork',                   c:'RR',    t:'Instant',              col:'R'},
+{n:'Goblin Balloon Brigade', c:'R',     t:'Creature - Goblin',    col:'R'},
+{n:'Goblin King',            c:'2RR',   t:'Creature - Goblin',    col:'R'},
+{n:'Granite Gargoyle',       c:'2RR',   t:'Creature - Gargoyle',  col:'R'},
+{n:'Hill Giant',             c:'3R',    t:'Creature - Giant',     col:'R'},
+{n:'Hurloon Minotaur',       c:'2RR',   t:'Creature - Minotaur',  col:'R'},
+{n:'Ironclaw Orcs',          c:'2R',    t:'Creature - Orc',       col:'R'},
+{n:'Keldon Warlord',         c:'3RR',   t:'Creature - Human',     col:'R'},
+{n:'Lightning Bolt',         c:'R',     t:'Instant',              col:'R'},
+{n:'Mana Flare',             c:'2R',    t:'Enchantment',          col:'R'},
+{n:'Mons\' Goblin Raiders',  c:'R',     t:'Creature - Goblin',    col:'R'},
+{n:'Orcish Artillery',       c:'1RR',   t:'Creature - Orc',       col:'R'},
+{n:'Orcish Oriflamme',       c:'3R',    t:'Enchantment',          col:'R'},
+{n:'Power Surge',            c:'3R',    t:'Enchantment',          col:'R'},
+{n:'Raging River',           c:'2R',    t:'Enchantment',          col:'R'},
+{n:'Rock Hydra',             c:'XRR',   t:'Creature - Hydra',     col:'R'},
+{n:'Shivan Dragon',          c:'4RR',   t:'Creature - Dragon',    col:'R'},
+{n:'Smoke',                  c:'1R',    t:'Enchantment',          col:'R'},
+{n:'Stone Giant',            c:'3RR',   t:'Creature - Giant',     col:'R'},
+{n:'Tunnel',                 c:'R',     t:'Sorcery',              col:'R'},
+{n:'Two-Headed Giant of Foriys',c:'4RR',t:'Creature - Giant',     col:'R'},
+{n:'Wall of Fire',           c:'2RR',   t:'Creature - Wall',      col:'R'},
+{n:'Wall of Stone',          c:'1RR',   t:'Creature - Wall',      col:'R'},
+/* ── GREEN ──────────────────────── */
+{n:'Birds of Paradise',      c:'G',     t:'Creature - Bird',      col:'G'},
+{n:'Cockatrice',             c:'3GG',   t:'Creature - Cockatrice',col:'G'},
+{n:'Craw Wurm',              c:'4GG',   t:'Creature - Wurm',      col:'G'},
+{n:'Elvish Archers',         c:'1G',    t:'Creature - Elf',       col:'G'},
+{n:'Fog',                    c:'G',     t:'Instant',              col:'G'},
+{n:'Force of Nature',        c:'2GGGG', t:'Creature - Elemental', col:'G'},
+{n:'Fungusaur',              c:'3G',    t:'Creature - Dinosaur',  col:'G'},
+{n:'Giant Growth',           c:'G',     t:'Instant',              col:'G'},
+{n:'Giant Spider',           c:'3G',    t:'Creature - Spider',    col:'G'},
+{n:'Grizzly Bears',          c:'1G',    t:'Creature - Bear',      col:'G'},
+{n:'Hurricane',              c:'XG',    t:'Sorcery',              col:'G'},
+{n:'Instill Energy',         c:'G',     t:'Enchantment - Aura',   col:'G'},
+{n:'Kudzu',                  c:'1GG',   t:'Enchantment - Aura',   col:'G'},
+{n:'Ley Druid',              c:'2G',    t:'Creature - Human',     col:'G'},
+{n:'Lifelace',               c:'G',     t:'Instant',              col:'G'},
+{n:'Llanowar Elves',         c:'G',     t:'Creature - Elf',       col:'G'},
+{n:'Lure',                   c:'2G',    t:'Enchantment - Aura',   col:'G'},
+{n:'Natural Selection',      c:'G',     t:'Sorcery',              col:'G'},
+{n:'Regeneration',           c:'1G',    t:'Enchantment - Aura',   col:'G'},
+{n:'Regrowth',               c:'1G',    t:'Sorcery',              col:'G'},
+{n:'Stream of Life',         c:'XG',    t:'Sorcery',              col:'G'},
+{n:'Thicket Basilisk',       c:'3GG',   t:'Creature - Basilisk',  col:'G'},
+{n:'Timber Wolves',          c:'G',     t:'Creature - Wolf',      col:'G'},
+{n:'Tranquility',            c:'2G',    t:'Sorcery',              col:'G'},
+{n:'Verduran Enchantress',   c:'1GG',   t:'Creature - Human',     col:'G'},
+{n:'Wall of Brambles',       c:'2G',    t:'Creature - Wall',      col:'G'},
+{n:'Wall of Wood',           c:'G',     t:'Creature - Wall',      col:'G'},
+{n:'War Mammoth',            c:'3G',    t:'Creature - Elephant',  col:'G'},
+{n:'Web',                    c:'G',     t:'Enchantment - Aura',   col:'G'},
+/* ── ARTIFACTS ───────────────────── */
+{n:'Ankh of Mishra',         c:'2',     t:'Artifact',             col:'A'},
+{n:'Basalt Monolith',        c:'3',     t:'Artifact',             col:'A'},
+{n:'Black Vise',             c:'1',     t:'Artifact',             col:'A'},
+{n:'Brass Man',              c:'1',     t:'Artifact Creature',    col:'A'},
+{n:'Chaos Orb',              c:'2',     t:'Artifact',             col:'A'},
+{n:'Clockwork Beast',        c:'6',     t:'Artifact Creature',    col:'A'},
+{n:'Copper Tablet',          c:'2',     t:'Artifact',             col:'A'},
+{n:'Crystal Rod',            c:'1',     t:'Artifact',             col:'A'},
+{n:'Disrupting Scepter',     c:'3',     t:'Artifact',             col:'A'},
+{n:'Forcefield',             c:'3',     t:'Artifact',             col:'A'},
+{n:'Gauntlet of Might',      c:'4',     t:'Artifact',             col:'A'},
+{n:'Glasses of Urza',        c:'1',     t:'Artifact',             col:'A'},
+{n:'Helm of Chatzuk',        c:'1',     t:'Artifact',             col:'A'},
+{n:'Howling Mine',           c:'2',     t:'Artifact',             col:'A'},
+{n:'Icy Manipulator',        c:'4',     t:'Artifact',             col:'A'},
+{n:'Iron Star',              c:'1',     t:'Artifact',             col:'A'},
+{n:'Ivory Tower',            c:'1',     t:'Artifact',             col:'A'},
+{n:'Jade Monolith',          c:'4',     t:'Artifact',             col:'A'},
+{n:'Jade Statue',            c:'4',     t:'Artifact',             col:'A'},
+{n:'Jayemdae Tome',          c:'4',     t:'Artifact',             col:'A'},
+{n:'Juggernaut',             c:'4',     t:'Artifact Creature',    col:'A'},
+{n:'Library of Leng',        c:'1',     t:'Artifact',             col:'A'},
+{n:'Mana Vault',             c:'1',     t:'Artifact',             col:'A',fast:1},
+{n:'Millstone',              c:'2',     t:'Artifact',             col:'A'},
+{n:'Nevinyrral\'s Disk',     c:'4',     t:'Artifact',             col:'A'},
+{n:'Obsianus Golem',         c:'6',     t:'Artifact Creature',    col:'A'},
+{n:'Ornithopter',            c:'0',     t:'Artifact Creature',    col:'A'},
+{n:'The Rack',               c:'1',     t:'Artifact',             col:'A'},
+{n:'Relic Barrier',          c:'2',     t:'Artifact',             col:'A'},
+{n:'Rod of Ruin',            c:'3',     t:'Artifact',             col:'A'},
+{n:'Rocket Launcher',        c:'4',     t:'Artifact',             col:'A'},
+{n:'Sol Ring',               c:'1',     t:'Artifact',             col:'A',fast:1},
+{n:'Sunglasses of Urza',     c:'4',     t:'Artifact',             col:'A'},
+{n:'Tetravus',               c:'6',     t:'Artifact Creature',    col:'A'},
+{n:'Throne of Bone',         c:'1',     t:'Artifact',             col:'A'},
+{n:'Time Vault',             c:'2',     t:'Artifact',             col:'A'},
+{n:'Triskelion',             c:'6',     t:'Artifact Creature',    col:'A'},
+{n:'Winter Orb',             c:'2',     t:'Artifact',             col:'A'},
+{n:'Wooden Sphere',          c:'1',     t:'Artifact',             col:'A'},
+/* ── LANDS ───────────────────────── */
+{n:'Badlands',               c:'',      t:'Land - Dual',          col:'L'},
+{n:'Bayou',                  c:'',      t:'Land - Dual',          col:'L'},
+{n:'Forest',                 c:'',      t:'Basic Land - Forest',  col:'L',basic:1},
+{n:'Island',                 c:'',      t:'Basic Land - Island',  col:'L',basic:1},
+{n:'Library of Alexandria',  c:'',      t:'Land - Legendary',     col:'L'},
+{n:'Mountain',               c:'',      t:'Basic Land - Mountain',col:'L',basic:1},
+{n:'Plains',                 c:'',      t:'Basic Land - Plains',  col:'L',basic:1},
+{n:'Plateau',                c:'',      t:'Land - Dual',          col:'L'},
+{n:'Savannah',               c:'',      t:'Land - Dual',          col:'L'},
+{n:'Scrubland',              c:'',      t:'Land - Dual',          col:'L'},
+{n:'Strip Mine',             c:'',      t:'Land',                 col:'L'},
+{n:'Swamp',                  c:'',      t:'Basic Land - Swamp',   col:'L',basic:1},
+{n:'Taiga',                  c:'',      t:'Land - Dual',          col:'L'},
+{n:'Tropical Island',        c:'',      t:'Land - Dual',          col:'L'},
+{n:'Tundra',                 c:'',      t:'Land - Dual',          col:'L'},
+{n:'Underground Sea',        c:'',      t:'Land - Dual',          col:'L'},
+{n:'Volcanic Island',        c:'',      t:'Land - Dual',          col:'L'},
+].sort((a,b)=>a.n.localeCompare(b.n));
+
+/* ── ATRAXA SAMPLE (Commander) ── */
+const ATRAXA_DECK = {
+  commander:'Atraxa, Praetors\' Voice',
+  cards:{"Doubling Season":1,"Vorinclex, Monstrous Raider":1,"Deepglow Skate":1,"The Ozolith":1,"Pir, Imaginative Rascal":1,"Hardened Scales":1,"Branching Evolution":1,"Sol Ring":1,"Mana Crypt":1,"Mox Diamond":1,"Chrome Mox":1,"Lotus Petal":1,"Birds of Paradise":1,"Noble Hierarch":1,"Deathrite Shaman":1,"Sphinx of the Second Sun":1,"Sphinx of Magosi":1,"Rhystic Study":1,"Mystic Remora":1,"Sylvan Library":1,"Esper Sentinel":1,"Swords to Plowshares":1,"Path to Exile":1,"Assassin's Trophy":1,"Abrupt Decay":1,"Teferi's Protection":1,"Heroic Intervention":1,"Flawless Maneuver":1,"Swan Song":1,"Demonic Tutor":1,"Vampiric Tutor":1,"Enlightened Tutor":1,"Worldly Tutor":1,"Teferi, Who Slows the Sunset":1,"Jace, the Mind Sculptor":1,"Oko, Thief of Crowns":1,"Narset, Parter of Veils":1,"Simic Ascendancy":1,"Darksteel Reactor":1,"Helix Pinnacle":1,"Approach of the Second Sun":1,"Winding Constrictor":1,"Corpsejack Menace":1,"Primal Vigor":1,"Tamiyo, the Moon Sage":1,"Command Tower":1,"Exotic Orchard":1,"City of Brass":1,"Mana Confluence":1,"Flooded Strand":1,"Polluted Delta":1,"Windswept Heath":1,"Wooded Foothills":1,"Marsh Flats":1,"Verdant Catacombs":1,"Scalding Tarn":1,"Misty Rainforest":1,"Arid Mesa":1,"Bloodstained Mire":1,"Hallowed Fountain":1,"Watery Grave":1,"Godless Shrine":1,"Overgrown Tomb":1,"Breeding Pool":1,"Temple Garden":1,"Steam Vents":1,"Stomping Ground":1,"Sacred Foundry":1,"Hinterland Harbor":1,"Sunpetal Grove":1,"Drowned Catacomb":1,"Isolated Chapel":1,"Woodland Cemetery":1,"Glacial Fortress":1,"Dragonskull Summit":1,"Rootbound Crag":1,"Sulfur Falls":1,"Clifftop Retreat":1,"Indatha Triome":1,"Zagoth Triome":1,"Ketria Triome":1,"Raugrin Triome":1,"Savai Triome":1,"Forest":2,"Island":2,"Plains":1,"Swamp":1}
+};
+
+/* ────────────────────────────────────────────────────────────────────
+   UTILITIES
+──────────────────────────────────────────────────────────────────── */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+
+function cmc(cost) {
+  if (!cost || cost === '') return 0;
+  const num = cost.match(/\d+/g);
+  let n = num ? num.reduce((a,x)=>a+parseInt(x),0) : 0;
+  const sym = cost.replace(/\d+/g,'').replace(/X/gi,'');
+  return n + sym.length;
+}
+
+const COL_COLORS = {W:'#f5e642',U:'#4ecdc4',B:'#c0c0c0',R:'#ff6b35',G:'#6bcb77',A:'#aaaaaa',L:'#8b7355'};
+
+function colorPip(col) {
+  const c = COL_COLORS[col] || '#888';
+  return `<span class="colpip" style="background:${c};color:${c}"></span>`;
+}
+
+function cardByName(n){return CARDS.find(c=>c.n===n)}
+
+/* ────────────────────────────────────────────────────────────────────
+   NAVIGATION
+──────────────────────────────────────────────────────────────────── */
+function show(view){
+  $$('.view').forEach(s=>s.hidden=s.id!=='view-'+view);
+  $$('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
+  localStorage.lastView=view;
+}
+$$('.navbtn').forEach(b=>b.onclick=()=>show(b.dataset.view));
+show(localStorage.lastView||'builder');
+
+/* ── MIRROR ── */
+const mirror=$('#mirror');
+mirror.checked=localStorage.mirror==='1';
+document.documentElement.classList.toggle('inverted',mirror.checked);
+mirror.onchange=e=>{localStorage.mirror=e.target.checked?'1':'0';document.documentElement.classList.toggle('inverted',e.target.checked)};
+
+/* ── EASTER EGG ── */
+let buf='';
+window.addEventListener('keydown',e=>{
+  buf=(buf+e.key).toUpperCase().slice(-8);
+  if(buf.includes('CAMERON')){const cam=$('#cam');cam.classList.add('show');setTimeout(()=>cam.classList.remove('show'),2600);buf=''}
+});
+
+/* ────────────────────────────────────────────────────────────────────
+   DECKBUILDER
+──────────────────────────────────────────────────────────────────── */
+let deck={};
+let activeColFilter=null;
+let commander=null; // {name, card}
+
+const formatSelect=$('#formatSelect');
+const formatRules=$('#formatRules');
+const cmdZone=$('#cmdZone');
+const cmdSearchEl=$('#cmdSearch');
+const cmdResultsEl=$('#cmdResults');
+const cmdCardEl=$('#cmdCard');
+
+function isCommander(){return formatSelect.value==='commander'}
+
+function formatLimits(){
+  return isCommander()
+    ? {minCards:100, maxCopies:1, maxFast:99, maxP9:1, singleton:true}
+    : {minCards:40,  maxCopies:4, maxFast:4,  maxP9:1, singleton:false};
+}
+
+formatSelect.onchange=()=>{
+  const lim=formatLimits();
+  if(isCommander()){
+    formatRules.textContent='100-card singleton · Commander zone · No fast mana limit';
+    cmdZone.classList.add('active');
+    $('#formatNote').textContent='COMMANDER: 100-card singleton + 1 commander. Commanders must be legendary creatures.';
+  } else {
+    formatRules.textContent='40-card min · Power 9 max 1 · Fast Mana max 4 · 4 copies max';
+    cmdZone.classList.remove('active');
+    $('#formatNote').textContent='ALPHA40: Power 9 max 1 · Fast Mana (Lotus, Moxen, Sol Ring, Vault) max 4 total · Max 4 copies except basics';
+  }
+  deck={}; commander=null; cmdCardEl.textContent='— none set —'; renderDeck(); renderPool();
+};
+
+// Commander search
+cmdSearchEl.addEventListener('input',()=>{
+  const q=cmdSearchEl.value.toLowerCase();
+  if(!q){cmdResultsEl.innerHTML='';return}
+  const hits=CARDS.filter(c=>c.t.toLowerCase().includes('creature')&&c.n.toLowerCase().includes(q)).slice(0,10);
+  cmdResultsEl.innerHTML=hits.map(c=>`<div class="cardrow" data-n="${c.n}" style="cursor:pointer">${colorPip(c.col)}${c.n} <em>${c.c}</em></div>`).join('');
+  $$('#cmdResults .cardrow').forEach(r=>{r.onclick=()=>{commander={name:r.dataset.n};cmdCardEl.textContent=r.dataset.n;cmdSearchEl.value='';cmdResultsEl.innerHTML=''}});
+});
+
+// Pool rendering
+function renderPool(){
+  const q=$('#search').value.toLowerCase();
+  const colF=activeColFilter;
+  $('#pool').innerHTML='';
+  CARDS.filter(c=>{
+    const matchQ=!q||(c.n.toLowerCase().includes(q)||c.t.toLowerCase().includes(q)||(c.col&&c.col.toLowerCase()===q));
+    const matchC=!colF||c.col===colF;
+    return matchQ&&matchC;
+  }).slice(0,300).forEach(c=>{
+    const row=document.createElement('div'); row.className='cardrow';
+    const pip=colorPip(c.col);
+    row.innerHTML=`${pip}<span>${c.n} <em>${c.c||'—'} <span style="opacity:.5">${c.t}</span></em></span><button class="btn small">+</button>`;
+    row.querySelector('button').onclick=()=>addCard(c);
+    $('#pool').appendChild(row);
+  });
+}
+
+function addCard(c){
+  const lim=formatLimits();
+  const cur=deck[c.n]||0;
+  if(c.p9&&cur>=1){alert('POWER 9 // MAX 1');return}
+  if(!c.basic&&!lim.singleton&&cur>=lim.maxCopies){alert(`MAX ${lim.maxCopies} COPIES`);return}
+  if(lim.singleton&&cur>=1){alert('COMMANDER: SINGLETON — MAX 1 COPY');return}
+  if(!isCommander()&&c.fast){
+    const fastTotal=Object.entries(deck).reduce((s,[k,v])=>s+(cardByName(k)?.fast?v:0),0);
+    if(fastTotal>=lim.maxFast){alert('FAST MANA // MAX 4 TOTAL');return}
+  }
+  deck[c.n]=cur+1; renderDeck();
+}
+
+function typeOf(c){
+  if(!c) return 'Other';
+  const t=c.t||'';
+  if(t.includes('Land')) return 'Land';
+  if(t.includes('Creature')) return 'Creature';
+  if(t.includes('Artifact')) return 'Artifact';
+  if(t.includes('Enchantment')) return 'Enchant';
+  if(t.includes('Instant')) return 'Instant';
+  if(t.includes('Sorcery')) return 'Sorcery';
+  if(t.includes('Planeswalker')) return 'PWalker';
+  return 'Other';
+}
+
+function renderDeck(){
+  $('#deckList').innerHTML='';
+  let total=0, fast=0, p9=0;
+  const typeCounts={Creature:0,Land:0,Instant:0,Sorcery:0,Artifact:0,Enchant:0,PWalker:0,Other:0};
+  Object.entries(deck).sort((a,b)=>a[0].localeCompare(b[0])).forEach(([k,v])=>{
+    total+=v; const c=cardByName(k)||{};
+    if(c.fast)fast+=v; if(c.p9)p9+=v;
+    typeCounts[typeOf(c)]=(typeCounts[typeOf(c)]||0)+v;
+    const row=document.createElement('div'); row.className='cardrow';
+    row.innerHTML=`${colorPip(c.col||'A')}<span>${v}x ${k}</span><button class="btn small">-</button>`;
+    row.querySelector('button').onclick=()=>{deck[k]--; if(deck[k]<=0)delete deck[k]; renderDeck()};
+    $('#deckList').appendChild(row);
+  });
+  const lim=formatLimits();
+  const warn=[];
+  if(total<lim.minCards)warn.push(`NEED ${lim.minCards-total} MORE`);
+  if(!isCommander()&&fast>4)warn.push(`FAST MANA ${fast}/4!`);
+  const statusColor=total>=lim.minCards?'var(--g)':'var(--m)';
+  $('#deckStats').innerHTML=`<div>TOTAL: <b style="color:${statusColor}">${total}/${lim.minCards}</b> // FAST: ${fast} // P9: ${p9}</div><div style="color:var(--m)">${warn.join(' | ')}</div>`;
+  const tb=Object.entries(typeCounts).filter(([,v])=>v>0).map(([k,v])=>`${k}:${v}`).join(' · ');
+  $('#deckTypeBreakdown').textContent=tb;
+  drawCurve();
+}
+
+function drawCurve(){
+  const canvas=$('#curveCanvas');
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width, H=canvas.height;
+  ctx.clearRect(0,0,W,H);
+
+  // Build CMC buckets 0..7+
+  const buckets=new Array(8).fill(0);
+  Object.entries(deck).forEach(([k,v])=>{
+    const c=cardByName(k);
+    if(c&&!c.t.includes('Land')){
+      const cm=Math.min(cmc(c.c),7);
+      buckets[cm]+=v;
+    }
+  });
+  const maxB=Math.max(...buckets,1);
+  const barW=Math.floor(W/8);
+  const labels=['0','1','2','3','4','5','6','7+'];
+
+  buckets.forEach((b,i)=>{
+    const x=i*barW;
+    const barH=Math.floor((b/maxB)*(H-14));
+    // gradient based on CMC: low=green, mid=amber, high=red
+    const t=i/7;
+    const r=Math.floor(255*t);
+    const g=Math.floor(200*(1-t)+65*t);
+    ctx.fillStyle=`rgba(${r},${g},65,0.8)`;
+    ctx.fillRect(x+2,H-14-barH,barW-4,barH);
+    // label
+    ctx.fillStyle='#888';
+    ctx.font='8px monospace';
+    ctx.fillText(labels[i],x+Math.floor(barW/2)-3,H-3);
+    if(b>0){
+      ctx.fillStyle='#fff';
+      ctx.fillText(b,x+Math.floor(barW/2)-(b>9?4:2),H-16-barH);
+    }
+  });
+}
+
+$('#search').oninput=renderPool;
+
+// Color filter
+$$('.colFilter').forEach(b=>{
+  b.onclick=()=>{
+    if(b.classList.contains('colClear')){activeColFilter=null;$$('.colFilter').forEach(x=>x.classList.remove('col-active'))}
+    else{
+      if(activeColFilter===b.dataset.col){activeColFilter=null;b.classList.remove('col-active')}
+      else{activeColFilter=b.dataset.col;$$('.colFilter').forEach(x=>x.classList.remove('col-active'));b.classList.add('col-active')}
+    }
+    renderPool();
+  };
+});
+
+$('#clearDeck').onclick=()=>{deck={};commander=null;cmdCardEl.textContent='— none set —';renderDeck()};
+
+$('#sampleAlpha').onclick=()=>{
+  formatSelect.value='alpha40'; formatSelect.dispatchEvent(new Event('change'));
+  deck={'Black Lotus':1,'Mox Pearl':1,'Mox Sapphire':1,'Mox Jet':1,'Ancestral Recall':1,'Time Walk':1,'Lightning Bolt':4,'Counterspell':4,'Serra Angel':2,'Shivan Dragon':2,'Sol Ring':1,'Swords to Plowshares':4,'Dark Ritual':4,'Island':6,'Mountain':6,'Plains':2};
+  renderDeck();
+};
+
+$('#sampleAtraxa').onclick=()=>{
+  formatSelect.value='commander'; formatSelect.dispatchEvent(new Event('change'));
+  commander={name:"Atraxa, Praetors' Voice"};
+  cmdCardEl.textContent="Atraxa, Praetors' Voice";
+  deck={...ATRAXA_DECK.cards};
+  renderDeck();
+};
+
+$('#saveDeck').onclick=()=>{
+  const lim=formatLimits();
+  const total=Object.values(deck).reduce((a,b)=>a+b,0);
+  if(total<lim.minCards&&!confirm(`DECK UNDER ${lim.minCards} — SAVE ANYWAY?`))return;
+  const name=prompt('DECK NAME:','DUSK-'+new Date().toISOString().slice(5,10)); if(!name)return;
+  const author=prompt('AUTHOR:','ANON')||'ANON';
+  const teacher=prompt('WHO TAUGHT YOU THIS? (lineage)','')||'';
+  const decks=JSON.parse(localStorage.alpha40decks||'[]');
+  const entry={id:Date.now(),name,author,teacher,cards:{...deck},commander:commander?.name||null,format:formatSelect.value,date:new Date().toISOString()};
+  decks.unshift(entry); localStorage.alpha40decks=JSON.stringify(decks.slice(0,100));
+  const lin=JSON.parse(localStorage.alpha40_lineage||'[]');
+  lin.unshift({ts:entry.date,loc:'Buffalo, MN',author,teacher,deck:name,total,format:entry.format,commander:entry.commander,hash:btoa(JSON.stringify(deck)).slice(0,12)});
+  localStorage.alpha40_lineage=JSON.stringify(lin.slice(0,200));
+  renderLog(); refreshDecks(); alert('SAVED TO LOCAL BOX // LINEAGE LOGGED');
+};
+
+$('#textExport').onclick=()=>{
+  const box=$('#textExportBox'), area=$('#textExportArea');
+  if(box.hidden){
+    let lines=[];
+    if(commander?.name) lines.push(`Commander: ${commander.name}`,'');
+    Object.entries(deck).sort((a,b)=>a[0].localeCompare(b[0])).forEach(([k,v])=>lines.push(`${v} ${k}`));
+    area.value=lines.join('\n');
+    box.hidden=false;
+  } else {
+    box.hidden=true;
+  }
+};
+
+renderPool(); renderDeck();
+
+/* ────────────────────────────────────────────────────────────────────
+   TOME
+──────────────────────────────────────────────────────────────────── */
+let tomeColFilter=null;
+const tomeSearch=$('#tomeSearch'), tomeList=$('#tomeList');
+function renderTome(){
+  const q=tomeSearch.value.toLowerCase();
+  const cf=tomeColFilter;
+  const filtered=CARDS.filter(c=>{
+    const mq=!q||(c.n.toLowerCase().includes(q)||c.t.toLowerCase().includes(q));
+    const mc=!cf||c.col===cf;
+    return mq&&mc;
+  });
+  tomeList.innerHTML=filtered.map(c=>{
+    const pc=COL_COLORS[c.col]||'#888';
+    return `<div class="tomeCard" style="border-color:${pc}44">
+      <b>${c.n}</b><span class="cost">${c.c||'—'}</span><br>
+      <i>${c.t}</i>
+      ${c.p9?'<br><span style="color:var(--m);font-size:.75em">POWER 9</span>':''}
+      ${c.fast?'<br><span style="color:var(--amber);font-size:.75em">FAST MANA</span>':''}
+    </div>`;
+  }).join('');
+}
+tomeSearch.oninput=renderTome;
+$$('.tomeFilter').forEach(b=>{
+  b.onclick=()=>{
+    if(b.classList.contains('tomeAll')){tomeColFilter=null;$$('.tomeFilter').forEach(x=>x.classList.remove('col-active'))}
+    else{tomeColFilter=b.dataset.col===tomeColFilter?null:b.dataset.col;$$('.tomeFilter').forEach(x=>x.classList.remove('col-active'));if(tomeColFilter)b.classList.add('col-active')}
+    renderTome();
+  };
+});
+renderTome();
+
+/* ────────────────────────────────────────────────────────────────────
+   ARENA (GOLDFISH SIMULATOR)
+──────────────────────────────────────────────────────────────────── */
+const deckSelect=$('#deckSelect'), handEl=$('#hand'), libCount=$('#libCount');
+let library=[], hand=[];
+function refreshDecks(){
+  const decks=JSON.parse(localStorage.alpha40decks||'[]');
+  deckSelect.innerHTML=decks.map(d=>`<option value="${d.id}">${d.name} [${d.format||'alpha40'}] — ${Object.values(d.cards).reduce((a,b)=>a+b,0)} cards</option>`).join('')||'<option>(no decks saved)</option>';
+}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function renderArena(){
+  handEl.innerHTML=hand.map(c=>{
+    const cd=cardByName(c)||{};
+    const pc=COL_COLORS[cd.col||'A'];
+    return `<div class="card" style="border-color:${pc};box-shadow:0 0 8px ${pc}33">${colorPip(cd.col||'A')}${c}</div>`;
+  }).join('');
+  libCount.textContent=library.length;
+}
+$('#goldfish').onclick=()=>{
+  const decks=JSON.parse(localStorage.alpha40decks||'[]');
+  const d=decks.find(x=>x.id==deckSelect.value); if(!d)return alert('SELECT DECK');
+  library=[]; Object.entries(d.cards).forEach(([k,v])=>{for(let i=0;i<v;i++)library.push(k)});
+  shuffle(library); hand=library.splice(0,7); renderArena();
+};
+$('#draw').onclick=()=>{if(library.length){hand.push(library.shift());renderArena()}};
+$('#mull').onclick=()=>$('#goldfish').click();
+refreshDecks();
+
+/* ────────────────────────────────────────────────────────────────────
+   8-POINT TETHER (WebRTC P2P)
+──────────────────────────────────────────────────────────────────── */
+let pc, dc, tx=0, rx=0;
+const innerStatus=$('#innerStatus'), txEl=$('#tx'), rxEl=$('#rx'), p2pLog=$('#p2pLog');
+function p2plog(m){p2pLog.innerHTML=`<div>&gt; ${m}</div>`+p2pLog.innerHTML}
+function setupDC(){
+  dc.onopen=()=>{innerStatus.textContent='LINKED';innerStatus.style.color='var(--g)';p2plog('** CHANNEL OPEN **')};
+  dc.onclose=()=>{innerStatus.textContent='CLOSED';innerStatus.style.color='var(--m)'};
+  dc.onmessage=e=>{rx++;rxEl.textContent=rx;p2plog(`RX: ${e.data}`)};
+}
+const STUN={iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]};
+function genCode(){const w=['DUSK','DAWN','DAY','COMET','MUTINY','CARDIFF','ALPHA'];return w[Math.floor(Math.random()*w.length)]+'-'+(10000+Math.floor(Math.random()*90000))}
+$('#host').onclick=async()=>{
+  try{
+    pc=new RTCPeerConnection(STUN);
+    dc=pc.createDataChannel('alpha40',{ordered:true}); setupDC();
+    $('#hostBox').hidden=false; $('#visitBox').hidden=true;
+    $('#roomCode').textContent=genCode();
+    const offer=await pc.createOffer(); await pc.setLocalDescription(offer);
+    await new Promise(r=>{if(pc.iceGatheringState==='complete')r();else pc.onicecandidate=e=>!e.candidate&&r()});
+    $('#offerOut').value=btoa(JSON.stringify(pc.localDescription));
+    innerStatus.textContent='HOSTING'; innerStatus.style.color='var(--b)'; p2plog('HOST OFFER CREATED — copy to visitor');
+  }catch(err){alert('WebRTC error: '+err)}
+};
+$('#setAnswer').onclick=async()=>{
+  try{const ans=JSON.parse(atob($('#answerIn').value.trim()));await pc.setRemoteDescription(ans);p2plog('ANSWER SET — awaiting channel')}catch(e){alert('Bad answer — check paste')}
+};
+$('#visit').onclick=()=>{$('#visitBox').hidden=false;$('#hostBox').hidden=true;innerStatus.textContent='VISITING'};
+$('#makeAnswer').onclick=async()=>{
+  try{
+    pc=new RTCPeerConnection(STUN);
+    pc.ondatachannel=e=>{dc=e.channel;setupDC()};
+    const off=JSON.parse(atob($('#offerIn').value.trim()));
+    await pc.setRemoteDescription(off);
+    const ans=await pc.createAnswer(); await pc.setLocalDescription(ans);
+    await new Promise(r=>{if(pc.iceGatheringState==='complete')r();else pc.onicecandidate=e=>!e.candidate&&r()});
+    $('#answerOut').value=btoa(JSON.stringify(pc.localDescription)); p2plog('ANSWER CREATED — copy to host');
+  }catch(e){alert('Bad offer — check paste')}
+};
+$('#send').onclick=()=>{
+  const v=$('#msg').value.trim(); if(!v||!dc||dc.readyState!=='open')return;
+  dc.send(v); tx++; txEl.textContent=tx; p2plog(`TX: ${v}`); $('#msg').value='';
+};
+$('#msg').addEventListener('keydown',e=>{if(e.key==='Enter')$('#send').click()});
+
+/* ────────────────────────────────────────────────────────────────────
+   LINEAGE LOG
+──────────────────────────────────────────────────────────────────── */
+const logList=$('#logList');
+function renderLog(){
+  const lin=JSON.parse(localStorage.alpha40_lineage||'[]');
+  logList.innerHTML=lin.length?lin.map(e=>`<div class="logentry"><b>${new Date(e.ts).toLocaleString()}</b> // <span style="color:var(--b)">${e.deck}</span> [${e.format||'alpha40'}] // AUTH:${e.author} // LINEAGE:${e.teacher||'—'} // ${e.loc} // HASH:${e.hash}${e.commander?` // CDR:${e.commander}`:''}</div>`).join(''):'<i>NO LINEAGE YET — SAVE A DECK</i>';
+}
+$('#exportLog').onclick=()=>{
+  const data=JSON.stringify({exported:new Date().toISOString(),attribution:'ROOT0-ATTRIBUTION-v1.0 / David Lee Wise / TriPod LLC',location:'Buffalo, MN',lineage:JSON.parse(localStorage.alpha40_lineage||'[]'),decks:JSON.parse(localStorage.alpha40decks||'[]')},null,2);
+  const blob=new Blob([data],{type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a');
+  a.href=url; a.download='ALPHA40_LINEAGE_COMMONS.json'; a.click(); URL.revokeObjectURL(url);
+};
+$('#clearLog').onclick=()=>{if(confirm('CLEAR ALL LINEAGE? CANNOT UNDO')){localStorage.removeItem('alpha40_lineage');renderLog()}};
+renderLog();
+
+/* ── BOOT ── */
+p2plog('BOX ONLINE // TYPE CAMERON');
+})();
+</script>
+</body>
+</html>
