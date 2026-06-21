@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="alpha40-box — a ROOT0/TriPod repository. ALPHA40::BOX — Privacy-first MTG Alpha deckbuilder. No cloud. No tracking. 220+ cards, Commander mode, WebRTC P2P.">
+<title>alpha40-box · ROOT0</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='17' fill='none' stroke='%23a7a3c8' stroke-width='3'/%3E%3Ccircle cx='32' cy='32' r='5' fill='%238a5fe0'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Newsreader:opsz,wght@6..72,300;6..72,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+ *{box-sizing:border-box;margin:0;padding:0} html,body{min-height:100%}
+ body{background:#ece6f2;color:#2a2440;font-family:'Newsreader',serif;line-height:1.55}
+ .wrap{max-width:880px;margin:0 auto;padding:0 20px 60px}
+ .marq{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:1px;padding:10px 0;border-bottom:1px solid #cdc6dc;color:#6a5fb0}
+ .marq a{color:#7a52d0;text-decoration:none} .marq a:hover{color:#4a3a90}
+ header{padding:40px 0 22px;text-align:center}
+ h1{font-family:'Press Start 2P',monospace;font-size:clamp(18px,5vw,34px);color:#5a4fb0;line-height:1.3;word-break:break-word}
+ .desc{font-size:clamp(15px,2.4vw,21px);font-weight:300;max-width:640px;margin:16px auto 0}
+ .badge{font-family:'Space Mono',monospace;font-size:11px;color:#6a5fb0;margin-top:18px;line-height:1.7;opacity:.85}
+ .sec{margin-top:30px} h2{font-family:'Space Mono',monospace;font-size:13px;letter-spacing:2px;color:#8a5fe0;text-transform:uppercase;margin-bottom:12px}
+ .readme{white-space:pre-wrap;font-family:'Space Mono',monospace;font-size:13px;line-height:1.7;background:rgba(127,119,221,0.05);border:1px solid #cdc6dc;border-radius:9px;padding:16px 18px;max-height:560px;overflow:auto}
+ .muted{opacity:.6;font-style:italic}
+ .btn{display:inline-block;font-family:'Space Mono',monospace;font-size:13px;color:#fff;background:#7a52d0;border-radius:8px;padding:10px 18px;text-decoration:none;margin-top:6px}
+ .btn:hover{background:#5a3ab0}
+ footer{font-family:'Space Mono',monospace;font-size:11px;color:#6a5fb0;opacity:.7;margin-top:40px;border-top:1px solid #cdc6dc;padding-top:16px;text-align:center;line-height:1.8}
+ footer a{color:#7a52d0}
+</style></head><body><div class="wrap">
+<div class="marq"><a href="https://davidwise01.github.io/ud0/">◄ UD0</a> &nbsp;·&nbsp; <a href="https://davidwise01.github.io/atlas/">ATLAS</a> &nbsp;·&nbsp; ROOT0 / TriPod</div>
+<header><h1>alpha40-box</h1><p class="desc">ALPHA40::BOX — Privacy-first MTG Alpha deckbuilder. No cloud. No tracking. 220+ cards, Commander mode, WebRTC P2P.</p>
+<div class="badge">governor · David Lee Wise (ROOT0) · instance AVAN (locked)<br>CC-BY-ND-4.0 · TRIPOD-IP-v1.1</div></header>
+<div class="sec"><h2>Readme</h2><div class="readme"># ALPHA40::BOX // COMMONS EDITION
+
+**Privacy-first MTG Alpha deckbuilder. No cloud. No tracking. Runs offline.**
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
+[![Format: Alpha 40](https://img.shields.io/badge/Format-Alpha%2040-ff0088?style=flat-square)](#)
+[![Format: Commander](https://img.shields.io/badge/Format-Commander-00e5ff?style=flat-square)](#)
+[![Cards: 220+](https://img.shields.io/badge/Cards-220%2B-00ff41?style=flat-square)](#)
+[![No Cloud](https://img.shields.io/badge/Data-localStorage%20only-ffb000?style=flat-square)](#)
+
+---
+
+## What It Is
+
+A single HTML file that is a complete MTG Alpha deckbuilder and goldfish simulator.
+Open `BOX-1.html` in any browser. No install. No account. No server. Your data never leaves your machine.
+
+## Features
+
+### Deckbuilder
+- **220+ Alpha Set cards** — most of the set, Power Nine to basic lands
+- **Two formats**: Alpha 40 (40-card, Power/Fast Mana limits) and Commander/EDH (100-card singleton)
+- **Format rules enforced**: Power 9 max 1, Fast Mana max 4 total, 4-copy limit, Commander singleton
+- **Color filters**: W / U / B / R / G / Artifacts / Lands — single-click filtering
+- **Mana curve chart**: live Canvas bar chart updates as you build
+- **Type breakdown**: Creatures · Spells · Lands · Artifacts counted live
+- **Commander zone**: search and set your commander card
+- **Text export**: one-click deck list for MTGO / paper / sharing
+- **Sample decks**: Classic Alpha 40 and Atraxa Commander (99-card + commander)
+
+### Tome
+- Full searchable card reference with color-coded cards
+- Filter by color, search by name or type
+- Power Nine and Fast Mana flags
+
+### Arena (Goldfish Simulator)
+- Load any saved deck, draw 7, draw, mulligan
+- Cards color-coded in hand view
+
+### 8-Point Tether (WebRTC P2P)
+- Direct peer-to-peer connection via WebRTC data channel
+- Manual copy-paste signaling (no server required)
+- Works air-gapped on LAN
+- Chat / message passing between two boxes
+
+### Lineage Log
+- Every saved deck gets a timestamped lineage entry
+- Records: author, who taught you, deck name, card hash, format
+- Export full provenance as JSON
+
+---
+
+## Run
+
+```bash
+# Just open in browser
+start BOX-1.html
+
+# Or launch in Edge kiosk mode (PowerShell)
+.\Launch-BOX1.ps1
+```
+
+No build step. No dependencies. Zero.
+
+---
+
+## Offline Image Mode
+
+```bash
+pip install requests
+python dow</div></div>
+<div class="sec"><a class="btn" href="https://github.com/DavidWise01/alpha40-box">view the code on GitHub →</a></div>
+<footer>alpha40-box · a ROOT0 / TriPod repository · catalogued in the <a href="https://davidwise01.github.io/atlas/">atlas</a><br><a href="https://davidwise01.github.io/ud0/">← the biosphere</a></footer>
+</div></body></html>
